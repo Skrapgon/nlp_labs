@@ -1,5 +1,6 @@
+import os
+import pickle
 import xml.etree.ElementTree as ET
-import json
 
 words: dict[str, int | list[int]] = {} # все слова
 lemmas: dict[int, list[str, int]] = {} # леммы
@@ -27,8 +28,8 @@ def save_speech_parts():
         name = g.find('name').text
         speech_parts.append(name)
 
-    with open('speech_parts.json', 'w') as speech_parts_file:
-        json.dump(speech_parts, speech_parts_file)
+    with open('speech_parts.pkl', 'wb') as speech_parts_file:
+        pickle.dump(speech_parts, speech_parts_file)
 
 
 def get_lemmas_id(id: int) -> set[int]:
@@ -70,6 +71,7 @@ def save_words_lemmas():
         
         l = lem.find('l')
         lemma = l.get('t')
+        lemma = lemma.replace('ё', 'е')
         ps = speech_parts.index(l.find('g').get('v'))
         
         lemm_id = get_lemmas_id(id)
@@ -82,6 +84,7 @@ def save_words_lemmas():
         
         for g in lem.findall('f'):
             word = g.get('t')
+            word = word.replace('ё', 'е')
             
             if word not in words:
                 words[word] = tmp if len(lemm_id) == 1 else lemm_id
@@ -91,13 +94,15 @@ def save_words_lemmas():
                 else:
                     words[word] = set([words[word], *lemm_id])
     
-    with open('lemmas.json', 'w') as lemmas_file:
-        json.dump(lemmas, lemmas_file, indent=4)
+    with open('lemmas.pkl', 'wb') as lemmas_file:
+        pickle.dump(lemmas, lemmas_file)
         
-    with open('words.json', 'w') as words_file:
-        json.dump({k: list(v) if isinstance(v, set) and len(v) > 1 else list(v)[0] if isinstance(v, set) and len(v) == 1 else v for k, v in words.items()}, words_file, indent=4)
+    with open('words.pkl', 'wb') as words_file:
+        pickle.dump({k: list(v) if isinstance(v, set) and len(v) > 1 else list(v)[0] if isinstance(v, set) and len(v) == 1 else v for k, v in words.items()}, words_file)
     
-    
-load_xml('dict.opcorpora.xml')
+
+base_path = os.path.dirname(__file__)
+
+load_xml(os.path.join(base_path, 'dict.opcorpora.xml'))
 save_speech_parts()
 save_words_lemmas()

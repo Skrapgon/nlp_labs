@@ -32,8 +32,4 @@ def calculate_avg_lemmatization_time(file: str = 'test_lemmatization_time.txt', 
         print(f'AVG lemmatization time: {(end-start)/iter}')
 
 if __name__ == '__main__':
-    calculate_avg_initialization_time()
-    
-    calculate_avg_lemmatization_time()
-    
     main()
