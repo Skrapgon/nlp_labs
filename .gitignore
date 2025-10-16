@@ -199,3 +199,4 @@ cython_debug/
 /logs/*
 
 *.xml
+.env
