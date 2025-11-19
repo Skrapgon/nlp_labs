@@ -6,7 +6,7 @@ from datasets import load_dataset
 from summarizer import Summarizer
 from get_acc import Evaluator
 
-ruT5 = 'cointegrated/ruT5-base'
+# ruT5 = 'cointegrated/ruT5-base'
 UrukHan_t5 = 'UrukHan/t5-russian-summarization'
 ru_sum = 'sarahai/ru-sum'
 
@@ -60,10 +60,10 @@ def find_best_model(save_texts: bool = False):
     
 def save_json(texts, file=input_file):
     with open(os.path.join(base_path, file), 'w', encoding='utf-8') as save_file:
-        json.dump(texts, save_file)
+        json.dump(texts, save_file, ensure_ascii=False, indent=4)
 
 def main(best_model):
-    with open(os.path.join(base_path, input_file), 'r') as inp_file:
+    with open(os.path.join(base_path, input_file), 'r', encoding="utf-8") as inp_file:
         texts = json.load(inp_file)
         
         summarizer = Summarizer(best_model)
@@ -72,10 +72,10 @@ def main(best_model):
         print(texts)
         print(results)
         
-        with open(os.path.join(base_path, output_file), 'w') as save_file:
-            json.dump(results, save_file)
+        with open(os.path.join(base_path, output_file), 'w', encoding="utf-8") as save_file:
+            json.dump(results, save_file, ensure_ascii=False, indent=4)
         
-        with open(os.path.join(base_path, 'gold.json'), 'r') as gold:
+        with open(os.path.join(base_path, 'gold.json'), 'r', encoding='utf-8') as gold:
             summ = json.load(gold)
             print(summ)
 

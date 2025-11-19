@@ -200,3 +200,5 @@ cython_debug/
 
 *.xml
 .env
+
+sentiment_classification/
